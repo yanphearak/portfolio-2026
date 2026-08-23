@@ -158,7 +158,10 @@ export default function Nav() {
           open ? "grid-rows-[1fr] border-b" : "grid-rows-[0fr]"
         }`}
       >
-        <ul className="min-h-0 space-y-1 overflow-hidden px-5 py-4">
+        {/* Capped to the viewport below the 4rem bar, and scrollable: in
+            landscape on a phone there is less height than this sheet needs,
+            and `overflow-hidden` silently cut the last links off. */}
+        <ul className="max-h-[calc(100dvh-4rem)] min-h-0 space-y-1 overflow-y-auto overscroll-contain px-5 py-4">
           {NAV.map((link) => (
             <li key={link.id}>
               <a

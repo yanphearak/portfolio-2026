@@ -21,7 +21,7 @@ export const site = {
     "DevOps Engineer automating CI/CD and deployments on-premise with Jenkins, Ansible, ArgoCD and Kubernetes, plus self-hosted LLM agents for server operations.",
   // Used for absolute URLs in metadata (OG image, canonical). Update this if
   // you attach a custom domain.
-  url: "https://portfolio-2026.vercel.app",
+  url: "https://portfolio.rakhall.fun",
 
   // --- Availability field in the hero -------------------------------------
   // Renders as a STATUS label + value beside the photo. Set `available: false`
