@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Quicksand } from "next/font/google";
+import { Overpass } from "next/font/google";
 import { site } from "@/config/site";
 import "./globals.css";
 
-const sans = Quicksand({
+const sans = Overpass({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#070809" },
-    { media: "(prefers-color-scheme: light)", color: "#fbfbfc" },
+    { media: "(prefers-color-scheme: dark)", color: "#14202c" },
+    { media: "(prefers-color-scheme: light)", color: "#edf0f3" },
   ],
 };
 
@@ -59,10 +59,6 @@ export default function RootLayout({
     <html lang="en" data-theme="dark" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        {/* Without JS the scroll-reveal never runs, so show everything. */}
-        <noscript>
-          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
-        </noscript>
       </head>
       <body className={sans.variable}>{children}</body>
     </html>

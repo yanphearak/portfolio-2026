@@ -1,66 +1,68 @@
 import { site } from "@/config/site";
-import Reveal from "./Reveal";
 import Section from "./Section";
-import IconLink from "./ui/IconLink";
-import {
-  ArrowIcon,
-  GitHubIcon,
-  LinkedInIcon,
-  MailIcon,
-  TelegramIcon,
-} from "./Icons";
+import { GitHubIcon, LinkedInIcon, TelegramIcon } from "./Icons";
 
+/**
+ * The end of the line: the rail stops at this section's station. The email
+ * address is the call to action, set large enough to read as one.
+ */
 export default function Contact() {
   const { links, contact } = site;
+
+  const elsewhere = [
+    links.github && { href: links.github, label: "GitHub", Icon: GitHubIcon },
+    links.linkedin && {
+      href: links.linkedin,
+      label: "LinkedIn",
+      Icon: LinkedInIcon,
+    },
+    links.telegram && {
+      href: links.telegram,
+      label: "Telegram",
+      Icon: TelegramIcon,
+    },
+  ].filter(Boolean) as {
+    href: string;
+    label: string;
+    Icon: (props: { className?: string }) => React.ReactNode;
+  }[];
 
   return (
     <Section
       id="contact"
       title={site.sections.contact.label}
       subtitle={site.sections.contact.subtitle}
-      align="center"
-      backdrop={
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="animate-float-slow absolute bottom-[-180px] left-1/2 h-[460px] w-[620px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,var(--glow-a),transparent)] blur-2xl" />
-        </div>
-      }
     >
-      <Reveal delay={120}>
-        <p className="mx-auto max-w-xl text-lead leading-relaxed text-muted">
-          {contact.body}
-        </p>
-      </Reveal>
+      <p className="max-w-[56ch] text-lead leading-relaxed text-muted">
+        {contact.body}
+      </p>
 
-      <Reveal delay={180}>
+      {links.email && (
         <a
           href={`mailto:${links.email}`}
-          className="group mt-9 inline-flex items-center gap-2.5 rounded-xl bg-text px-6 py-3.5 text-sm font-medium text-bg transition-opacity hover:opacity-85"
+          className="mt-8 inline-block text-[1.35rem] font-extrabold tracking-[-0.01em] break-all text-text underline decoration-accent decoration-[3px] underline-offset-[10px] transition-colors hover:text-accent sm:text-4xl"
         >
-          <MailIcon className="h-4 w-4" />
           {links.email}
-          <ArrowIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
         </a>
-      </Reveal>
+      )}
 
-      <Reveal delay={240}>
-        <div className="mt-8 flex items-center justify-center gap-3">
-          {links.github && (
-            <IconLink href={links.github} label="GitHub" external>
-              <GitHubIcon />
-            </IconLink>
-          )}
-          {links.linkedin && (
-            <IconLink href={links.linkedin} label="LinkedIn" external>
-              <LinkedInIcon />
-            </IconLink>
-          )}
-          {links.telegram && (
-            <IconLink href={links.telegram} label="Telegram" external>
-              <TelegramIcon />
-            </IconLink>
-          )}
-        </div>
-      </Reveal>
+      {elsewhere.length > 0 && (
+        <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3">
+          {elsewhere.map(({ href, label, Icon }) => (
+            <li key={label}>
+              <a
+                href={href}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-center gap-2 text-body font-semibold text-muted transition-colors hover:text-text"
+              >
+                <Icon className="h-[18px] w-[18px]" />
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </Section>
   );
 }

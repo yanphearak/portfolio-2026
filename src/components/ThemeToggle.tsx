@@ -32,7 +32,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
-      className="grid h-9 w-9 place-items-center rounded-lg border border-line bg-surface text-muted transition-colors hover:border-line-strong hover:bg-surface-hover hover:text-text"
+      className="grid h-9 w-9 place-items-center rounded-[6px] border border-line text-muted transition-colors hover:border-line-strong hover:text-text"
     >
       {/* Render nothing until mounted so server and client markup agree. */}
       {mounted ? (

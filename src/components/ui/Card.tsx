@@ -1,26 +1,36 @@
 type Props = {
   as?: "div" | "article";
+  /**
+   * The line this card belongs to: any colour value, usually one of the
+   * `--line-*` tokens. Draws the band across the top and re-tints everything
+   * inside that uses the accent.
+   */
+  line?: string;
   /** Extra layout classes for the card body (padding, flex direction, gaps). */
   className?: string;
   children: React.ReactNode;
 };
 
 /**
- * The one card shell on the page: hairline border, surface fill, and on hover a
- * small lift plus an accent wash bleeding in from the top-right corner.
- *
- * Skills, Selected Work and Education all use it, so three grids that look
- * alike now also *behave* alike — before this they each hovered differently and
- * two of them glowed different colours.
- *
- * Children need `relative` to sit above the wash.
+ * The one card shell on the page: raised fill, hairline border, small radius,
+ * and a coloured band across the top naming which line it's on. Flat on
+ * purpose — no hover lift or glow; nothing on it is clickable.
  */
-export default function Card({ as: Tag = "div", className = "", children }: Props) {
+export default function Card({
+  as: Tag = "div",
+  line,
+  className = "",
+  children,
+}: Props) {
   return (
     <Tag
-      className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-line-strong hover:bg-surface-hover ${className}`}
+      data-line={line ? "" : undefined}
+      style={line ? ({ "--accent": line } as React.CSSProperties) : undefined}
+      className={`relative flex h-full flex-col overflow-hidden rounded-[6px] border border-line bg-raised p-5 ${className}`}
     >
-      <div className="pointer-events-none absolute -top-24 -right-16 h-48 w-48 rounded-full bg-[radial-gradient(closest-side,var(--glow-a),transparent)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+      {line && (
+        <span aria-hidden className="absolute inset-x-0 top-0 h-1 bg-accent" />
+      )}
       {children}
     </Tag>
   );

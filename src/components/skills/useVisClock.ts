@@ -7,8 +7,7 @@ const DEFAULT_HOLD_MS = 2400;
 
 /**
  * Some webviews never run the intersection step. A visual frozen on its first
- * frame reads as broken, so start it anyway after this long. Same safety net,
- * and the same 2.5s, as <Reveal />.
+ * frame reads as broken, so start it anyway after this long.
  */
 const FAILSAFE_MS = 2500;
 

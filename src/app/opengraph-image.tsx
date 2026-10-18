@@ -9,16 +9,15 @@ export const contentType = "image/png";
 
 // The page re-themes; a link preview can't. These are the dark palette values
 // from globals.css, pinned so the card always looks the same in a feed.
-const BG = "#070809";
-const TEXT = "#eceef1";
-const MUTED = "#8a9099";
-const FAINT = "#767d88";
-const ACCENT = "#34d399";
-const BORDER = "rgba(255,255,255,0.16)";
+const BG = "#14202c";
+const TEXT = "#e6ebf0";
+const MUTED = "#9aa8b6";
+const ACCENT = "#eba53c";
 
 /**
  * Built at request time from `public/<photo>` rather than checked in as a flat
  * PNG, so editing name, role or location in site.ts re-renders the card too.
+ * The outcome line from the hero runs along the bottom.
  */
 export default async function Image() {
   const photo = site.photo
@@ -26,6 +25,7 @@ export default async function Image() {
         join(process.cwd(), "public", site.photo.replace(/^\//, "")),
       ).toString("base64")}`
     : null;
+  const stops = site.outcomes;
 
   return new ImageResponse(
     (
@@ -34,103 +34,83 @@ export default async function Image() {
           width: "100%",
           height: "100%",
           display: "flex",
-          alignItems: "center",
-          gap: 64,
-          padding: "0 80px",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "80px 80px 64px",
           background: BG,
-          backgroundImage: `radial-gradient(ellipse 60% 70% at 12% 0%, rgba(52,211,153,0.16), transparent), radial-gradient(ellipse 55% 65% at 95% 100%, rgba(56,189,248,0.13), transparent)`,
         }}
       >
-        {photo && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={photo}
-            alt=""
-            width={320}
-            height={320}
+        <div style={{ display: "flex", alignItems: "center", gap: 56 }}>
+          <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+            <div
+              style={{
+                fontSize: 88,
+                fontWeight: 800,
+                color: TEXT,
+                letterSpacing: -3,
+                lineHeight: 1,
+              }}
+            >
+              {site.name}
+            </div>
+            <div style={{ marginTop: 20, fontSize: 36, color: MUTED }}>
+              {`${site.role} in ${site.location}`}
+            </div>
+          </div>
+
+          {photo && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={photo}
+              alt=""
+              width={200}
+              height={200}
+              style={{ width: 200, height: 200, borderRadius: 10, objectFit: "cover" }}
+            />
+          )}
+        </div>
+
+        {/* the outcome line: the hero's, stop for stop. Four equal columns
+            with the stop at the left of each, as on the page, so the line
+            runs from 13px to a quarter-width short of the right edge. */}
+        <div style={{ display: "flex", position: "relative" }}>
+          <div
             style={{
-              width: 320,
-              height: 320,
-              borderRadius: 999,
-              objectFit: "cover",
-              border: `2px solid ${BORDER}`,
+              position: "absolute",
+              left: 13,
+              // Satori has no calc(): the row is 1040px wide (1200 less padding).
+              right: 1040 / stops.length - 13,
+              top: 10,
+              height: 6,
+              background: ACCENT,
             }}
           />
-        )}
-
-        <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 14,
-              fontSize: 22,
-              color: FAINT,
-              letterSpacing: 2,
-            }}
-          >
-            <div style={{ width: 40, height: 2, background: ACCENT }} />
-            {site.location.toUpperCase()}
-          </div>
-
-          <div
-            style={{
-              marginTop: 20,
-              fontSize: 76,
-              fontWeight: 700,
-              color: TEXT,
-              letterSpacing: -2,
-              lineHeight: 1.05,
-            }}
-          >
-            {site.name}
-          </div>
-
-          <div
-            style={{
-              marginTop: 8,
-              fontSize: 54,
-              fontWeight: 700,
-              color: ACCENT,
-              letterSpacing: -1.5,
-            }}
-          >
-            {site.role}
-          </div>
-
-          <div
-            style={{
-              marginTop: 28,
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 12,
-            }}
-          >
-            {/* Two: three wrap to a ragged 2-and-1 in the space left beside
-                the portrait. Field name first, then the value it holds — the
-                same reading order as the outcome chain on the page. */}
-            {site.outcomes.slice(0, 2).map((item) => (
+          {stops.map((item) => (
+            <div
+              key={item.label}
+              style={{ display: "flex", flexDirection: "column", flex: 1 }}
+            >
               <div
-                key={item.label}
                 style={{
-                  display: "flex",
-                  gap: 10,
-                  padding: "10px 18px",
+                  width: 26,
+                  height: 26,
                   borderRadius: 999,
-                  border: `1px solid ${BORDER}`,
-                  fontSize: 22,
-                  color: MUTED,
+                  background: BG,
+                  border: `5px solid ${ACCENT}`,
+                }}
+              />
+              <div
+                style={{
+                  marginTop: 18,
+                  fontSize: 28,
+                  fontWeight: 700,
+                  color: TEXT,
                 }}
               >
-                <span style={{ color: FAINT, textTransform: "uppercase" }}>
-                  {item.label}
-                </span>
-                <span style={{ color: TEXT, fontWeight: 700 }}>
-                  {item.value}
-                </span>
+                {item.value}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     ),

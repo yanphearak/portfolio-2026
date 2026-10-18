@@ -1,5 +1,4 @@
 import { site } from "@/config/site";
-import Reveal from "./Reveal";
 import Section from "./Section";
 import Card from "./ui/Card";
 import Chip from "./ui/Chip";
@@ -20,6 +19,16 @@ const VIS = {
   scan: ScanVis,
 } as const;
 
+/** Each panel's line colour, from the `--line-*` tokens in globals.css. */
+const LINE: Record<keyof typeof VIS, string> = {
+  pipeline: "var(--line-pipeline)",
+  rollout: "var(--line-rollout)",
+  anomaly: "var(--line-anomaly)",
+  agent: "var(--line-agent)",
+  metrics: "var(--line-metrics)",
+  scan: "var(--line-scan)",
+};
+
 /** One line describing each visual, for people who can't see it play. */
 const VIS_LABEL: Record<keyof typeof VIS, string> = {
   pipeline: "A delivery pipeline running its stages one after another.",
@@ -33,82 +42,44 @@ const VIS_LABEL: Record<keyof typeof VIS, string> = {
 };
 
 export default function Skills() {
-  // Flattened once for the scrolling band under the cards. Deduplicated —
-  // some tools legitimately appear in more than one group (Python is in both
-  // CI/CD and AI), and the band should list each name only once.
-  const all = [...new Set(site.skills.flatMap((g) => g.items))];
-
   return (
-    <>
-      <Section
-        id="skills"
-        title={site.sections.skills.label}
-        subtitle={site.sections.skills.subtitle}
-      >
-        {/* Three across from `lg`: six cards land in two rows instead of three. */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {site.skills.map((group, i) => {
-            const Vis = VIS[group.vis];
+    <Section
+      id="skills"
+      title={site.sections.skills.label}
+      subtitle={site.sections.skills.subtitle}
+    >
+      {/* Each group is its own line on the map, in its own colour: the band
+          across the top, and every live element in its visual. */}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {site.skills.map((group) => {
+          const Vis = VIS[group.vis];
 
-            return (
-              <Reveal key={group.title} delay={i * 70}>
-                <Card>
-                  <h3 className="relative text-body font-semibold tracking-tight">
-                    {group.title}
-                  </h3>
+          return (
+            <Card key={group.title} line={LINE[group.vis]}>
+              <h3 className="mt-1 text-body font-extrabold tracking-[-0.01em]">
+                {group.title}
+              </h3>
 
-                  {/* The panel itself is aria-hidden, so this one label stands
-                      in for it. Scoped to the visual rather than the whole card
-                      — the pills below have to stay readable. */}
-                  <div
-                    role="img"
-                    aria-label={VIS_LABEL[group.vis]}
-                    className="relative mt-4"
-                  >
-                    <Vis />
-                  </div>
-
-                  <ul className="relative mt-5 flex flex-wrap gap-2">
-                    {group.items.map((item) => (
-                      <Chip key={item}>{item}</Chip>
-                    ))}
-                  </ul>
-                </Card>
-              </Reveal>
-            );
-          })}
-        </div>
-      </Section>
-
-      {/* full-bleed scrolling band */}
-      <div
-        className="relative flex overflow-hidden border-y border-line py-4"
-        style={{
-          maskImage:
-            "linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)",
-          WebkitMaskImage:
-            "linear-gradient(to right, transparent, #000 12%, #000 88%, transparent)",
-        }}
-        aria-hidden
-      >
-        {/* duplicated track so the -50% loop is seamless */}
-        {[0, 1].map((copy) => (
-          <div
-            key={copy}
-            className="animate-marquee flex shrink-0 items-center gap-8 pr-8"
-          >
-            {all.map((item, i) => (
-              <span
-                key={`${copy}-${i}-${item}`}
-                className="text-sm whitespace-nowrap text-faint"
+              {/* The panel itself is aria-hidden, so this one label stands
+                  in for it. Scoped to the visual rather than the whole card
+                  — the tags below have to stay readable. */}
+              <div
+                role="img"
+                aria-label={VIS_LABEL[group.vis]}
+                className="mt-4"
               >
-                {item}
-                <span className="ml-8 text-accent">/</span>
-              </span>
-            ))}
-          </div>
-        ))}
+                <Vis />
+              </div>
+
+              <ul className="mt-4 flex flex-wrap gap-1.5">
+                {group.items.map((item) => (
+                  <Chip key={item}>{item}</Chip>
+                ))}
+              </ul>
+            </Card>
+          );
+        })}
       </div>
-    </>
+    </Section>
   );
 }

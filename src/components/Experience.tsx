@@ -1,216 +1,154 @@
-"use client";
-
-import { useRef, useState } from "react";
+import Image from "next/image";
 import { site } from "@/config/site";
-import Reveal from "./Reveal";
 import Section from "./Section";
 
-const jobs = site.experience;
+/** Bullets shown before the rest fold behind "Show all". */
+const VISIBLE = 4;
+
+/** The small hollow marker in front of each bullet: a minor stop. */
+function Stop() {
+  return (
+    <span
+      aria-hidden
+      className="absolute top-[0.55em] left-0 h-[7px] w-[7px] rounded-full shadow-[inset_0_0_0_1.5px_var(--faint)]"
+    />
+  );
+}
 
 /**
- * Tabbed, one role at a time — the shape the old site used, rebuilt on this
- * design system.
+ * The roles as stops down a timeline, newest first. A career really is a
+ * sequence, so a line is honest here. Each role leads with what it was and
+ * its first few responsibilities; the rest sit behind a native <details>, so
+ * 26 bullets never land as one wall and nothing needs client JavaScript.
  *
- * The three roles carry 26 bullets between them. As a single timeline that's a
- * wall nobody reads to the end of; as tabs each role is a short, scannable
- * panel and the reader chooses which one they care about. The rail doubles as
- * the career overview: newest at the top, dates under every company.
- *
- * On `lg` the tabs are a vertical rail with an accent edge marking the active
- * one; below that they collapse to a horizontal snap-scrolling row.
+ * Dates and logo sit in the left column, the work in the right; on phones
+ * they stack.
  */
 export default function Experience() {
-  const [active, setActive] = useState(0);
-  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  /** Select and focus by index, wrapping at both ends. */
-  function move(next: number) {
-    const i = (next + jobs.length) % jobs.length;
-    setActive(i);
-    tabs.current[i]?.focus();
-  }
-
-  function onKeyDown(e: React.KeyboardEvent) {
-    // Both axes are live: the rail is vertical on desktop and horizontal on
-    // mobile, and a key handler can't be written per-breakpoint.
-    const step: Record<string, number> = {
-      ArrowDown: 1,
-      ArrowRight: 1,
-      ArrowUp: -1,
-      ArrowLeft: -1,
-    };
-
-    if (e.key in step) {
-      e.preventDefault();
-      move(active + step[e.key]);
-    } else if (e.key === "Home") {
-      e.preventDefault();
-      move(0);
-    } else if (e.key === "End") {
-      e.preventDefault();
-      move(jobs.length - 1);
-    }
-  }
-
-  const job = jobs[active];
-  const current = job.period.includes("Present");
-  // "April 2024 — Present" → ["April 2024", "Present"], so the start and end of
-  // the range can be weighted differently. `.split` on a string without the
-  // dash leaves `to` undefined, which the JSX below treats as "no end date".
-  const [from, to] = job.period.split("—").map((part) => part.trim());
-
   return (
     <Section
       id="experience"
       title={site.sections.experience.label}
       subtitle={site.sections.experience.subtitle}
     >
-      <Reveal>
-        <div className="grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-10">
-          {/* --- the rail ------------------------------------------------- */}
-          <div
-            role="tablist"
-            aria-label="Employment history"
-            // Negative margin lets the mobile row bleed to the screen edge so
-            // the last tab doesn't look clipped mid-word.
-            className="-mx-5 flex snap-x snap-mandatory gap-2 overflow-x-auto px-5 pb-1 sm:-mx-8 sm:px-8 lg:mx-0 lg:flex-col lg:gap-0.5 lg:self-start lg:overflow-visible lg:border-l lg:border-line lg:px-0 lg:pb-0"
-          >
-            {jobs.map((entry, i) => {
-              const on = i === active;
+      <ol>
+        {site.experience.map((job) => {
+          const current = job.period.includes("Present");
+          // "April 2024 — Present" → ["April 2024", "Present"], so the start
+          // and end of the range can be weighted differently. A period without
+          // the dash leaves `to` undefined: no end date.
+          const [from, to] = job.period.split("—").map((part) => part.trim());
+          const shown = job.highlights.slice(0, VISIBLE);
+          const rest = job.highlights.slice(VISIBLE);
+          // Widened from the literal config type, so the "no logo" branch
+          // still type-checks while every current entry has one.
+          const logo: string = job.logo;
 
-              return (
-                <button
-                  key={`${entry.company}-${entry.period}`}
-                  ref={(el) => {
-                    tabs.current[i] = el;
-                  }}
-                  role="tab"
-                  id={`exp-tab-${i}`}
-                  aria-selected={on}
-                  aria-controls={`exp-panel-${i}`}
-                  tabIndex={on ? 0 : -1}
-                  onClick={() => setActive(i)}
-                  onKeyDown={onKeyDown}
-                  className={`shrink-0 snap-start rounded-xl border px-4 py-2.5 text-left transition-colors duration-200 lg:-ml-px lg:w-full lg:shrink lg:rounded-none lg:rounded-r-lg lg:border-y-0 lg:border-r-0 lg:border-l-[3px] lg:py-3 ${
-                    on
-                      ? "border-accent/40 bg-accent-soft text-accent lg:border-l-accent lg:bg-transparent"
-                      : "border-line bg-surface text-muted hover:border-line-strong hover:text-text lg:border-l-transparent lg:bg-transparent lg:hover:bg-surface"
-                  }`}
-                >
-                  <span className="block min-w-0">
-                    <span className="flex items-center gap-2">
-                      <span className="text-note font-bold whitespace-nowrap lg:whitespace-normal">
-                        {entry.short}
-                      </span>
-                      {entry.period.includes("Present") && (
-                        <span className="relative grid h-1.5 w-1.5 shrink-0 place-items-center">
-                          <span className="absolute h-1.5 w-1.5 animate-pulse-ring rounded-full bg-accent" />
-                          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                        </span>
-                      )}
-                    </span>
-                    <span className="mt-0.5 hidden text-micro font-medium tracking-wider text-faint lg:block">
-                      {entry.period}
-                    </span>
+          return (
+            <li
+              key={`${job.company}-${job.period}`}
+              className="grid gap-5 border-t border-line py-10 first:border-t-0 first:pt-0 last:pb-0 md:grid-cols-[10rem_minmax(0,1fr)] md:gap-10"
+            >
+              <div className="flex items-center gap-4 md:flex-col md:items-start">
+                {/* Logos sit on a white plate at a fixed height, so wordmarks
+                    and round emblems come out the same visual size in both
+                    themes. No logo: a lettered tile, never a broken image. */}
+                {logo ? (
+                  <span className="relative block h-12 w-24 shrink-0 rounded-[4px] bg-white">
+                    <Image
+                      src={logo}
+                      alt={`${job.company} logo`}
+                      fill
+                      sizes="96px"
+                      className="object-contain p-2"
+                    />
                   </span>
-                </button>
-              );
-            })}
-          </div>
+                ) : (
+                  <span
+                    aria-hidden
+                    className="grid h-12 w-12 shrink-0 place-items-center rounded-[4px] bg-raised text-lg font-extrabold text-muted"
+                  >
+                    {job.company.charAt(0)}
+                  </span>
+                )}
 
-          {/* --- the panel ------------------------------------------------ */}
-          <div
-            // Remounting on `active` replays the fade, so switching tabs reads
-            // as a change rather than a flicker of new text.
-            key={active}
-            role="tabpanel"
-            id={`exp-panel-${active}`}
-            aria-labelledby={`exp-tab-${active}`}
-            tabIndex={0}
-            className="animate-panel-in"
-          >
-            <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
-              <div>
-                <h3 className="text-lg font-semibold tracking-tight text-balance sm:text-xl">
-                  {job.role}
-                </h3>
-                <div className="mt-1.5 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-                  <span className="text-body font-bold text-accent">
-                    {job.company}
-                  </span>
-                  {job.type && (
+                <p className="text-note leading-snug text-muted">
+                  {from}
+                  {to && (
                     <>
-                      <span className="text-faint">·</span>
-                      <span className="text-body text-muted">{job.type}</span>
+                      {" to "}
+                      <span
+                        className={
+                          current ? "font-semibold text-accent" : "text-text"
+                        }
+                      >
+                        {to}
+                      </span>
                     </>
                   )}
-                </div>
+                </p>
               </div>
 
-              {/* The period reads as a range rather than a chip: start dimmed,
-                  a hairline for the dash, end carrying the weight — accent
-                  plus a live dot while the role is current. The old bordered
-                  pill sat right beside the role title and competed with it. */}
-              <span className="flex shrink-0 items-center gap-2.5 pt-1.5 text-xs font-semibold tracking-wider whitespace-nowrap uppercase">
-                <span className="text-faint">{from}</span>
-                {to && (
-                  <>
-                    <span
-                      aria-hidden="true"
-                      className="h-px w-5 bg-line-strong"
-                    />
-                    <span
-                      className={
-                        current ? "font-medium text-accent" : "text-text"
-                      }
-                    >
-                      {to}
-                    </span>
-                  </>
+              <div>
+                <h3 className="text-xl font-extrabold tracking-[-0.01em] sm:text-2xl">
+                  {job.role}
+                </h3>
+                <p className="mt-1 flex flex-wrap gap-x-3 text-body">
+                  <span className="font-semibold text-text">{job.company}</span>
+                  {job.type && <span className="text-muted">{job.type}</span>}
+                </p>
+
+                <p className="mt-4 max-w-[64ch] text-body leading-relaxed text-muted">
+                  {job.description}
+                </p>
+
+                {shown.length > 0 && (
+                  <ul className="mt-5 max-w-[64ch] space-y-2">
+                    {shown.map((point) => (
+                      <li
+                        key={point}
+                        className="relative pl-5 text-note leading-relaxed text-muted"
+                      >
+                        <Stop />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
                 )}
-                {current && (
-                  <span className="relative grid h-1.5 w-1.5 shrink-0 place-items-center">
-                    <span className="absolute h-1.5 w-1.5 animate-pulse-ring rounded-full bg-accent" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                  </span>
+
+                {rest.length > 0 && (
+                  <details className="group mt-2 max-w-[64ch]">
+                    <summary className="inline-flex list-none items-center gap-2 rounded-[3px] py-1 text-note font-semibold text-accent [&::-webkit-details-marker]:hidden">
+                      <span className="group-open:hidden">
+                        Show {rest.length} more
+                      </span>
+                      <span className="hidden group-open:inline">Show fewer</span>
+                      <svg
+                        viewBox="0 0 10 10"
+                        aria-hidden
+                        className="size-2.5 fill-current transition-transform group-open:rotate-180"
+                      >
+                        <path d="M1 3h8L5 8z" />
+                      </svg>
+                    </summary>
+                    <ul className="mt-2 space-y-2">
+                      {rest.map((point) => (
+                        <li
+                          key={point}
+                          className="relative pl-5 text-note leading-relaxed text-muted"
+                        >
+                          <Stop />
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
                 )}
-              </span>
-            </div>
-
-            <p className="mt-5 max-w-2xl text-body leading-relaxed text-muted">
-              {job.description}
-            </p>
-
-            {job.highlights?.length > 0 && (
-              <>
-                <div className="mt-6 h-px bg-line" />
-                {/* Two columns on wide screens: twelve bullets in one column is
-                    a column of text, not a list you can scan.
-
-                    Multi-column rather than `grid-cols-2` on purpose. A grid
-                    flows by row, so reading down the left column gives you
-                    every other bullet, and each row is as tall as its tallest
-                    item — which leaves ragged holes beside any long one.
-                    Columns flow top-to-bottom, then across: source order is
-                    scan order, and items pack tight. */}
-                <ul className="mt-6 gap-x-10 md:columns-2">
-                  {job.highlights.map((point) => (
-                    <li
-                      key={point}
-                      // `break-inside-avoid` keeps a wrapped bullet from being
-                      // split across the column boundary mid-sentence.
-                      className="relative mb-2.5 break-inside-avoid pl-5 text-note leading-relaxed text-muted"
-                    >
-                      <span className="absolute top-[0.6em] left-0 h-1.5 w-1.5 rounded-full bg-accent/70" />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </div>
-        </div>
-      </Reveal>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
     </Section>
   );
 }

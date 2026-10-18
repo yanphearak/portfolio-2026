@@ -1,20 +1,21 @@
 type Props = {
-  /** Small uppercase mono label, top left. */
+  /** Small label, top left. */
   label: string;
   /** Dim detail beside the label — a run number, a count. */
   note?: string;
-  /** Word inside the status pill, top right. */
+  /** Status word, top right. */
   status: string;
-  /** While true the status dot pulses. Set false once the cycle completes. */
+  /** While true the status dot is hollow (working); filled once the cycle completes. */
   busy: boolean;
   children: React.ReactNode;
 };
 
 /**
- * The frame every toolchain visual sits in: fixed height, hairline border, and
- * a header strip carrying a label and a status pill. Six different animations
- * share it, which is what makes the grid read as one designed object instead of
- * six unrelated widgets.
+ * The frame every toolchain visual sits in: fixed height, recessed fill, and a
+ * header strip carrying a label and a status. Six different animations share
+ * it, which is what makes the grid read as one designed object instead of six
+ * unrelated widgets. Colour comes from the panel's line (`--accent`, set by the
+ * card around it).
  *
  * Decorative throughout — the describing `aria-label` lives on the card outside.
  */
@@ -29,30 +30,23 @@ export default function VisPanel({
     <div
       aria-hidden
       // No margin of its own — the card that hosts it owns the spacing.
-      className="relative flex h-44 flex-col overflow-hidden rounded-xl border border-line bg-bg"
+      className="relative flex h-44 flex-col overflow-hidden rounded-[4px] bg-bg-soft"
     >
       <div className="flex shrink-0 items-center justify-between gap-3 border-b border-line px-3 py-2">
         <div className="flex items-baseline gap-1.5 overflow-hidden">
-          <span className="text-micro tracking-widest text-faint uppercase">
-            {label}
-          </span>
+          <span className="text-micro font-semibold text-muted">{label}</span>
           {note && (
-            <span className="truncate text-micro text-faint/70">
-              {note}
-            </span>
+            <span className="truncate text-micro text-faint">{note}</span>
           )}
         </div>
 
-        <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-accent-soft px-2 py-[3px]">
-          <span className="relative flex h-1.5 w-1.5">
-            {busy && (
-              <span className="animate-pulse-ring absolute inset-0 rounded-full bg-accent" />
-            )}
-            <span className="relative h-1.5 w-1.5 rounded-full bg-accent" />
-          </span>
-          <span className="text-[9.5px] tracking-widest text-accent uppercase">
-            {status}
-          </span>
+        <span className="flex shrink-0 items-center gap-1.5">
+          <span
+            className={`h-[7px] w-[7px] rounded-full ${
+              busy ? "shadow-[inset_0_0_0_1.5px_var(--accent)]" : "bg-accent"
+            }`}
+          />
+          <span className="text-micro text-accent">{status}</span>
         </span>
       </div>
 

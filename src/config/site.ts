@@ -9,7 +9,7 @@ export const site = {
   role: "DevOps Engineer",
   // Short line under your name in the hero. Keep it to one sentence.
   tagline:
-    "I automate software delivery in on-premise environments — Jenkins, Ansible and ArgoCD — and I'm building self-hosted AI agents that run tasks with a human in the loop.",
+    "I automate software delivery with Jenkins, Ansible and ArgoCD, on-premise and in the cloud, and I'm building self-hosted AI agents that run tasks with a human in the loop.",
   location: "Phnom Penh, Cambodia",
   // Profile photo. Drop the file in `public/` and point at it with a leading
   // slash. Set to "" and the portrait disappears from the About section.
@@ -18,16 +18,16 @@ export const site = {
   // Shown in the browser tab and in link previews.
   seoTitle: "Phearak Yan — DevOps Engineer",
   seoDescription:
-    "DevOps Engineer automating CI/CD and deployments on-premise with Jenkins, Ansible, ArgoCD and Kubernetes, plus self-hosted LLM agents for server operations.",
+    "DevOps Engineer automating CI/CD and deployments with Jenkins, Ansible, ArgoCD and Kubernetes, on-premise and in the cloud, plus self-hosted LLM agents for server operations.",
   // Used for absolute URLs in metadata (OG image, canonical). Update this if
   // you attach a custom domain.
   url: "https://portfolio.rakhall.fun",
 
-  // --- Availability field in the hero -------------------------------------
-  // Renders as a STATUS label + value beside the photo. Set `available: false`
-  // to drop the field entirely. Keep the text short — it sits on one line.
+  // --- Availability line in the hero --------------------------------------
+  // A green dot and this text under your role. Set `available: false` to drop
+  // it entirely. Keep the text short — it sits on one line.
   available: true,
-  availabilityText: "Exploring New Opportunities",
+  availabilityText: "Exploring new opportunities",
 
   // --- Links --------------------------------------------------------------
   // Remove any line you don't want; the icon disappears with it.
@@ -41,8 +41,8 @@ export const site = {
     resume: "",
   },
 
-  // --- Outcome chain (hero strip) -----------------------------------------
-  // The strip under the hero. It's drawn as a left-to-right flow, so ORDER
+  // --- Outcome line (hero) ------------------------------------------------
+  // The line under the hero, drawn as stops left to right, so ORDER
   // MATTERS: each entry should follow from the one before it. The default
   // reads as an argument — the experience produced the automation, which
   // bought back time, which cut cost — rather than four unrelated facts.
@@ -59,8 +59,8 @@ export const site = {
 
   // --- Section order ------------------------------------------------------
   // The single source of truth for what appears on the page and in what order.
-  // Reorder or delete a line and the nav, the scroll-spy and the 01/02/03
-  // numbering above each heading all follow — nothing else to renumber.
+  // Reorder or delete a line and the page, the nav and the scroll-spy all
+  // follow — the first section starts the line and the last one ends it.
   order: [
     "about",
     "skills",
@@ -70,8 +70,9 @@ export const site = {
   ],
 
   // --- Section headings ---------------------------------------------------
-  // `label` is the small uppercase eyebrow above the heading; `nav` is the
-  // (usually shorter) word in the top bar; `subtitle` is the big heading.
+  // `label` names the section's stop on the line (in the left margin on wide
+  // screens); `nav` is the (usually shorter) word in the top bar; `subtitle`
+  // is the big heading.
   sections: {
     about: {
       label: "About",
@@ -202,7 +203,8 @@ export const site = {
 
   // --- Skills -------------------------------------------------------------
   // Grouped into cards. Add or remove groups freely. `vis` picks which animation
-  // plays inside the card — one of the keys in `visuals` above.
+  // plays inside the card — one of the keys in `visuals` above — and with it
+  // the card's line colour (`--line-<vis>` in globals.css).
   skills: [
     {
       title: "CI/CD & Automation",
@@ -255,12 +257,12 @@ export const site = {
 
   // --- Education ----------------------------------------------------------
   // Newest first. Everything except `degree` and `school` is optional:
-  //   `credential` — the small chip on the right (e.g. "Degree", "Certificate")
+  //   `credential` — the small tag under the dates (e.g. "Degree", "Certificate")
   //   `description` — one or two sentences, or drop the line entirely
   //   `highlights` — coursework, thesis, awards; rendered as chips
   //   `link` — school or certificate URL; leave "" and the icon disappears
-  //   `image` — banner across the top of the card; file in `public/`, leading
-  //     slash. Leave "" and the card starts at the heading, as it did before.
+  //   `image` — photo under the heading; file in `public/`, leading slash.
+  //     Leave "" and the entry is text only.
   //   `snippet` — set true for exactly one entry to show the runnable
   //     hello-world card under it (see components/HelloWorldSnippet.tsx)
   // Keep the `highlights` key even when empty — omitting it breaks the build.
@@ -298,11 +300,12 @@ export const site = {
   // --- Experience ---------------------------------------------------------
   // Newest first. Use "Present" as the end date for your current role.
   //
-  // The section renders as tabs — one per role — so three extra fields matter
-  // here: `short` is the label on the tab (a full ministry name won't fit the
-  // rail), `type` is the employment type shown beside the company, and `logo`
-  // points at a file in `public/logos/`. Set `logo: ""` and that company falls
-  // back to a lettered tile, so a missing file never leaves a broken image.
+  // The section renders as a timeline, one stop per role. `type` is the
+  // employment type shown beside the company, and `logo` points at a file in
+  // `public/logos/`. Set `logo: ""` and that company falls back to a lettered
+  // tile, so a missing file never leaves a broken image. The first four
+  // `highlights` show; the rest fold behind "Show more". `short` is a compact
+  // name kept for any place a full ministry name won't fit.
   experience: [
     {
       role: "DevOps Engineer",
@@ -371,7 +374,7 @@ export const site = {
   // --- Contact ------------------------------------------------------------
   // The heading above this paragraph is `sections.contact.subtitle`.
   contact: {
-    body: "Open to DevOps, Platform and SRE roles — especially on-premise work and anything involving self-hosted AI tooling. The fastest way to reach me is email.",
+    body: "Open to DevOps roles: building CI/CD pipelines, automating infrastructure, and keeping services reliable and observable, whether on-premise, cloud or hybrid. The fastest way to reach me is email.",
   },
 } as const;
 

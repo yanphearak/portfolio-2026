@@ -17,14 +17,14 @@ const N = DURATIONS.length;
 /** Older lines slide up under this fade, the way a chat transcript does. */
 const FADE = "linear-gradient(to bottom, transparent, #000 22%)";
 
-/** Small leading dot, shared by every agent line. */
+/** Small leading dot, shared by every agent line: hollow while it works. */
 function Dot({ state }: { state: "run" | "done" }) {
   return (
-    <span className="relative h-[6px] w-[6px] shrink-0 rounded-full bg-accent">
-      {state === "run" && (
-        <span className="animate-pulse-ring absolute inset-0 rounded-full bg-accent" />
-      )}
-    </span>
+    <span
+      className={`h-[6px] w-[6px] shrink-0 rounded-full ${
+        state === "run" ? "shadow-[inset_0_0_0_1.5px_var(--accent)]" : "bg-accent"
+      }`}
+    />
   );
 }
 
@@ -122,7 +122,6 @@ export default function AgentVis() {
                     className="animate-bar-fill absolute inset-0 origin-left rounded-full bg-accent"
                     style={{ animationDuration: `${DURATIONS[3]}ms` }}
                   />
-                  <span className="animate-bar-sheen absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-accent-2 to-transparent" />
                 </span>
               ) : (
                 <CheckIcon className="ml-auto shrink-0 text-[9px] text-accent" />

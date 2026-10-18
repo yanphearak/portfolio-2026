@@ -2,84 +2,110 @@
 
 /* ---------------------------------------------------------------------------
    Palette. Dark is the default; the toggle flips `data-theme` on <html>.
-   Change these six-ish values and the whole site re-skins.
+
+   The page is drawn like a transit map: a slate "signal box" ground, an amber
+   main line (links, buttons, the current station), and one colour per skill
+   line. Change --accent and the main line re-skins; the --line-* values only
+   tint their own toolchain panel.
 --------------------------------------------------------------------------- */
 :root {
-  --bg: #070809;
-  --bg-soft: #0d0f12;
-  --surface: rgba(255, 255, 255, 0.026);
-  --surface-hover: rgba(255, 255, 255, 0.05);
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --text: #eceef1;
-  --muted: #8a9099;
-  /* Dim, but still ≥4.5:1 on --bg — it carries dates, labels and chips. */
-  --faint: #767d88;
-  --accent: #34d399;
-  --accent-soft: rgba(52, 211, 153, 0.12);
-  --accent-2: #38bdf8;
-  --glow-a: rgba(52, 211, 153, 0.16);
-  --glow-b: rgba(56, 189, 248, 0.13);
-  --grid: rgba(255, 255, 255, 0.035);
-  /* Syntax colours for the code snippet in Education. Three hues plus --faint
-     for punctuation: enough that it reads as highlighted code, few enough that
-     the card doesn't turn into a rainbow. */
-  --code-key: #f472b6;
-  --code-fn: #38bdf8;
-  --code-str: #fbbf24;
+  --bg: #14202c;
+  /* Recessed: insets such as the toolchain visuals and the code snippet. */
+  --bg-soft: #101a24;
+  --raised: #1b2937;
+  --surface: rgba(230, 235, 240, 0.04);
+  --surface-hover: rgba(230, 235, 240, 0.07);
+  --border: #2a3b4c;
+  --border-strong: #3a4f63;
+  /* The idle rail every line is drawn on before it lights up. */
+  --track: #34485b;
+  --text: #e6ebf0;
+  --muted: #9aa8b6;
+  /* Dim, but still ≥4.5:1 on --bg and --raised — it carries dates and labels. */
+  --faint: #8494a4;
+  --accent: #eba53c;
+  --accent-soft: rgba(235, 165, 60, 0.14);
+  --accent-2: #4f9de6;
+  /* A clear "go" for the availability dot; not used as decoration. */
+  --signal: #3fb68b;
+
+  /* One per toolchain panel, keyed by its `vis`. Bright enough to pass 4.5:1 as
+     small text on --bg, since the panels print status words in them. */
+  --line-pipeline: #eba53c;
+  --line-rollout: #5aa5ea;
+  --line-anomaly: #ec7563;
+  --line-agent: #dc7cb0;
+  --line-metrics: #45bd91;
+  --line-scan: #c79f73;
+
+  --code-key: #dc7cb0;
+  --code-fn: #5aa5ea;
+  --code-str: #eba53c;
 }
 
 [data-theme="light"] {
-  --bg: #fbfbfc;
-  --bg-soft: #f3f4f6;
-  --surface: rgba(9, 12, 20, 0.022);
-  --surface-hover: rgba(9, 12, 20, 0.045);
-  --border: rgba(9, 12, 20, 0.1);
-  --border-strong: rgba(9, 12, 20, 0.2);
-  --text: #14171c;
-  --muted: #5c6470;
-  --faint: #6b727e;
-  --accent: #0f9c6c;
-  --accent-soft: rgba(15, 156, 108, 0.11);
-  --accent-2: #0284c7;
-  --glow-a: rgba(15, 156, 108, 0.13);
-  --glow-b: rgba(2, 132, 199, 0.1);
-  --grid: rgba(9, 12, 20, 0.04);
-  /* Darkened so the same three hues still clear 4.5:1 on a light --bg-soft. */
-  --code-key: #be185d;
-  --code-fn: #0369a1;
-  --code-str: #a16207;
+  --bg: #edf0f3;
+  --bg-soft: #e3e8ec;
+  --raised: #ffffff;
+  --surface: rgba(20, 32, 44, 0.035);
+  --surface-hover: rgba(20, 32, 44, 0.06);
+  --border: #d3dae1;
+  --border-strong: #b7c2cd;
+  --track: #bcc6d0;
+  --text: #14202c;
+  --muted: #4c5b6a;
+  --faint: #5b6b7b;
+  --accent: #935500;
+  --accent-soft: rgba(147, 85, 0, 0.1);
+  --accent-2: #1f62b0;
+  --signal: #1a7452;
+
+  /* Darkened so each still clears 4.5:1 as text on white and on --bg. */
+  --line-pipeline: #935500;
+  --line-rollout: #1f62b0;
+  --line-anomaly: #b23a28;
+  --line-agent: #a0386f;
+  --line-metrics: #1a7452;
+  --line-scan: #7e5530;
+
+  --code-key: #a0386f;
+  --code-fn: #1f62b0;
+  --code-str: #935500;
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-bg-soft: var(--bg-soft);
+  --color-raised: var(--raised);
   --color-surface: var(--surface);
   --color-surface-hover: var(--surface-hover);
   --color-line: var(--border);
   --color-line-strong: var(--border-strong);
+  --color-track: var(--track);
   --color-text: var(--text);
   --color-muted: var(--muted);
   --color-faint: var(--faint);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-2: var(--accent-2);
+  --color-signal: var(--signal);
   --color-code-key: var(--code-key);
   --color-code-fn: var(--code-fn);
   --color-code-str: var(--code-str);
 
-  /* One family site-wide. There is no `font-mono` utility on purpose — if a
-     mono face is ever wanted again, load it in layout.tsx and add it back
-     here, rather than reintroducing the class ad hoc. */
+  /* One family site-wide: Overpass, after the US highway-sign face. There is
+     no `font-mono` utility on purpose — if a mono face is ever wanted, load it
+     in layout.tsx and add it back here rather than ad hoc. */
   --font-sans: var(--font-sans);
 
   /* The off-scale type steps this design actually uses, named. Everything else
      comes from Tailwind's own scale (text-xs 12px, text-sm 14px, …) — reach for
-     one of these four rather than inventing another text-[13.5px]. */
+     one of these rather than inventing another text-[13.5px]. */
   --text-micro: 10px;
   --text-note: 13px;
   --text-body: 15px;
   --text-lead: 17px;
+  --text-display: clamp(3rem, 9vw, 6rem);
 }
 
 /* --------------------------------------------------------------------------- */
@@ -95,7 +121,6 @@
 @layer base {
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
-  [role="tab"]:not([aria-disabled="true"]),
   a[href],
   label[for],
   summary,
@@ -112,7 +137,7 @@
 html {
   scroll-behavior: smooth;
   /* keeps anchored sections clear of the fixed header */
-  scroll-padding-top: 6rem;
+  scroll-padding-top: 5rem;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -144,7 +169,7 @@ pre {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 /* Scrollbar */
@@ -164,105 +189,58 @@ pre {
   background: var(--muted);
 }
 
-/* --- Utilities ------------------------------------------------------------ */
+/* --- Lines ----------------------------------------------------------------- */
 
-/* Faint blueprint grid used behind the hero. */
-.bg-grid {
-  background-image: linear-gradient(to right, var(--grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(
-    ellipse 80% 60% at 50% 0%,
-    #000 40%,
-    transparent 100%
-  );
+/* A toolchain panel sets `--accent` to its own line colour inline; the soft
+   tint has to be derived on the same element, or it would keep the inherited
+   amber one. */
+[data-line] {
+  --accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
-.text-gradient {
-  background: linear-gradient(115deg, var(--text) 20%, var(--accent) 65%, var(--accent-2) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  /* The gradient is clipped to this element's box, and the headings that use
-     this run tight leading — so the box ends above the baseline's descender and
-     the tail of a "g", "p" or "y" gets no gradient to paint, i.e. vanishes.
-     Grow the box past the descender, then pull the extra height back out of
-     flow so surrounding spacing is unchanged. */
-  padding-bottom: 0.16em;
-  margin-bottom: -0.16em;
+/* --- Hero: the outcome line --------------------------------------------------
+   The page's one orchestrated moment. The amber line draws itself along the
+   rail and each station lights as it arrives. Keyframes only describe the
+   starting state, so with motion off (or the animation never running) the
+   line simply renders finished. */
+
+.outcome-fill {
+  transform-origin: top;
+  animation: fill-y 1.6s cubic-bezier(0.65, 0, 0.35, 1) 0.35s both;
+}
+@media (min-width: 640px) {
+  .outcome-fill {
+    transform-origin: left;
+    animation-name: fill-x;
+  }
+}
+@keyframes fill-y {
+  from { transform: scaleY(0); }
+}
+@keyframes fill-x {
+  from { transform: scaleX(0); }
 }
 
-/* Hairline that fades at both ends. */
-.rule {
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--border-strong),
-    transparent
-  );
+/* Delay is set per station inline, timed to when the fill reaches it. */
+.outcome-stop {
+  animation: stop-arrive 0.3s ease-out both;
+}
+@keyframes stop-arrive {
+  from {
+    box-shadow: inset 0 0 0 3px var(--track);
+  }
+}
+.outcome-label {
+  animation: label-arrive 0.45s ease-out both;
+}
+@keyframes label-arrive {
+  from { opacity: 0.3; }
 }
 
-/* Scroll-reveal: elements start shifted, `.is-visible` lands them.
-   Added by the IntersectionObserver in <Reveal />. */
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-@keyframes float-slow {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(0, -26px, 0) scale(1.06); }
-}
-.animate-float-slow {
-  animation: float-slow 14s ease-in-out infinite;
-}
-
-@keyframes pulse-ring {
-  0% { transform: scale(0.85); opacity: 0.85; }
-  70% { transform: scale(2.1); opacity: 0; }
-  100% { opacity: 0; }
-}
-.animate-pulse-ring {
-  animation: pulse-ring 2.6s cubic-bezier(0.24, 0.76, 0.4, 1) infinite;
-}
-
-@keyframes caret {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-.animate-caret {
-  animation: caret 1.05s steps(1) infinite;
-}
-
-/* Experience tab panel: replayed on every tab change (the panel remounts), so
-   switching companies reads as a transition instead of a text swap. */
-@keyframes panel-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: none; }
-}
-.animate-panel-in {
-  animation: panel-in 0.34s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.animate-marquee {
-  animation: marquee 38s linear infinite;
-}
+/* --- Toolchain visuals ------------------------------------------------------ */
 
 /* Pipeline stage progress: the bar fills over the stage's own duration
-   (set inline), with a sheen sliding across it while it works. */
+   (set inline). */
 @keyframes bar-fill {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
@@ -271,17 +249,9 @@ pre {
   animation: bar-fill 1s linear forwards;
 }
 
-@keyframes bar-sheen {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(220%); }
-}
-.animate-bar-sheen {
-  animation: bar-sheen 1.15s ease-in-out infinite;
-}
-
-/* Security-scan sweep: a soft accent band travelling down the panel. Driven by
-   background-position rather than a transform so it never needs to know how
-   tall the panel is. */
+/* Security-scan sweep: a soft band in the panel's line colour travelling down.
+   Driven by background-position rather than a transform so it never needs to
+   know how tall the panel is. */
 @keyframes scan-beam {
   0% { background-position: 0 -60%; opacity: 0; }
   12% { opacity: 0.6; }
@@ -302,26 +272,18 @@ pre {
   animation: scan-beam 2.65s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-/* Respect the OS "reduce motion" setting: no drift, no reveal offset. */
+/* Respect the OS "reduce motion" setting. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .animate-float-slow,
-  .animate-pulse-ring,
-  .animate-marquee,
-  .animate-caret,
+  .outcome-fill,
+  .outcome-stop,
+  .outcome-label,
   .animate-bar-fill,
-  .animate-bar-sheen,
-  .animate-scan-beam,
-  .animate-panel-in {
+  .animate-scan-beam {
     animation: none !important;
   }
   /* Without its sweep the beam would sit parked across the top of the panel. */
   .animate-scan-beam {
     display: none;
-  }
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
 }

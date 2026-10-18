@@ -78,9 +78,6 @@ export default function RolloutVis() {
                                 : "bg-line-strong"
                           }`}
                         >
-                          {updating && (
-                            <span className="animate-pulse-ring absolute inset-0 rounded-[3px] bg-accent" />
-                          )}
                         </span>
                       );
                     })}

@@ -5,16 +5,12 @@ type Props = {
 };
 
 /**
- * The small mono tag used for every tech name on the page — skill groups,
- * project stacks, coursework. One design, one size, everywhere: two chip styles
- * for the same job is the sort of thing that reads as sloppy without anyone
- * being able to say why.
- *
- * Brightens with the surrounding <Card />'s hover via `group-hover`.
+ * The small tag used for every tech name on the page — skill groups,
+ * coursework, credentials. One design, one size, everywhere.
  */
 export default function Chip({ children, as: Tag = "li" }: Props) {
   return (
-    <Tag className="rounded-lg border border-line bg-bg px-2.5 py-1.5 text-xs text-muted transition-colors group-hover:border-line-strong">
+    <Tag className="rounded-[3px] bg-surface-hover px-2 py-1 text-xs text-muted">
       {children}
     </Tag>
   );

@@ -79,7 +79,7 @@ export default function AnomalyVis() {
                     key={k}
                     className={`flex-1 rounded-[2px] transition-[height,background-color] duration-200 ease-out ${
                       over
-                        ? "bg-accent shadow-[0_0_10px_var(--accent-soft)]"
+                        ? "bg-accent"
                         : "bg-line-strong"
                     }`}
                     style={{ height: `${v}%` }}
@@ -93,9 +93,7 @@ export default function AnomalyVis() {
           <div className="flex items-center gap-2 text-micro">
             {detected ? (
               <>
-                <span className="relative h-[6px] w-[6px] shrink-0 rounded-full bg-accent">
-                  <span className="animate-pulse-ring absolute inset-0 rounded-full bg-accent" />
-                </span>
+                <span className="h-[6px] w-[6px] shrink-0 rounded-full bg-accent" />
                 <span className="truncate text-text">anomaly · txn {txn}</span>
                 <span className="relative ml-auto h-1 w-8 shrink-0 overflow-hidden rounded-full bg-line-strong">
                   {/* keyframed, not transitioned — this element mounts mid-run,

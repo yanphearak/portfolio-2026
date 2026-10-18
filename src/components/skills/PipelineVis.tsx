@@ -69,7 +69,7 @@ export default function PipelineVis() {
                   {passed ? (
                     <CheckIcon className="text-accent" />
                   ) : running ? (
-                    <span className="animate-pulse-ring absolute inset-0 rounded-full bg-accent" />
+                    <span className="h-[5px] w-[5px] rounded-full bg-bg-soft" />
                   ) : (
                     <span className="h-1 w-1 rounded-full bg-faint/50" />
                   )}
@@ -97,7 +97,6 @@ export default function PipelineVis() {
                         className="animate-bar-fill absolute inset-0 origin-left rounded-full bg-accent"
                         style={{ animationDuration: `${stage.ms}ms` }}
                       />
-                      <span className="animate-bar-sheen absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-accent-2 to-transparent" />
                     </span>
                   ) : null}
                 </span>

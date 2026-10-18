@@ -6,9 +6,8 @@ import { useEffect, useRef, useState } from "react";
  * The first program, on the card for the degree where it was written.
  *
  * Three states: idle, `compiling` (a short beat so "Compile & Run" reads as
- * work rather than a no-op), then `ran` — which fires the alert and leaves a
- * shell line under the code, so the card itself shows the result instead of
- * only an OS dialog that vanishes.
+ * work rather than a no-op), then `ran` — which prints the program's output
+ * on a shell line under the code.
  */
 
 /** Source, as line-number → tokens. Written out rather than tokenised: it's six
@@ -50,7 +49,7 @@ export default function HelloWorldSnippet() {
   const [state, setState] = useState<"idle" | "compiling" | "ran">("idle");
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  // A pending compile must not fire its alert after the section unmounts.
+  // A pending compile must not land after the section unmounts.
   useEffect(() => () => clearTimeout(timer.current), []);
 
   function run() {
@@ -58,24 +57,16 @@ export default function HelloWorldSnippet() {
     setState("compiling");
     timer.current = setTimeout(() => {
       setState("ran");
-      alert("Hello World");
     }, COMPILE_MS);
   }
 
   return (
-    <div className="relative mt-5 overflow-hidden rounded-xl border border-line bg-bg-soft">
+    <div className="relative mt-6 overflow-hidden rounded-[6px] border border-line bg-bg-soft">
       {/* --- title bar ----------------------------------------------------- */}
       <div className="flex items-center gap-2.5 border-b border-line px-3.5 py-2.5">
-        <span className="flex gap-1.5" aria-hidden>
-          <span className="size-2 rounded-full bg-[#ff5f57]/70" />
-          <span className="size-2 rounded-full bg-[#febc2e]/70" />
-          <span className="size-2 rounded-full bg-[#28c840]/70" />
-        </span>
-        <span className="text-micro tracking-wider text-faint">
-          hello.c
-        </span>
-        <span className="ml-auto rounded border border-line px-1.5 py-0.5 text-micro tracking-widest text-faint">
-          C
+        <span className="text-note font-semibold text-muted">hello.c</span>
+        <span className="ml-auto text-note text-faint">
+          My first program
         </span>
       </div>
 
@@ -100,7 +91,7 @@ export default function HelloWorldSnippet() {
           type="button"
           onClick={run}
           aria-live="polite"
-          className="inline-flex items-center gap-2 rounded-lg border border-accent/35 bg-accent-soft px-3 py-1.5 text-xs font-medium text-accent transition-all duration-200 hover:border-accent/60 hover:bg-accent hover:text-bg active:scale-[0.97] disabled:opacity-70"
+          className="inline-flex items-center gap-2 rounded-[6px] bg-accent px-3 py-1.5 text-xs font-semibold text-bg transition-opacity duration-200 hover:opacity-90 disabled:opacity-70"
           disabled={state === "compiling"}
         >
           {state === "compiling" ? (
@@ -120,22 +111,18 @@ export default function HelloWorldSnippet() {
           )}
         </button>
 
-        <span className="text-micro tracking-wider text-faint">
-          gcc hello.c -o hello
-        </span>
+        <span className="text-note text-faint">gcc hello.c -o hello</span>
       </div>
 
       {/* --- output -------------------------------------------------------- */}
       {state === "ran" && (
-        <div className="animate-panel-in border-t border-line bg-bg px-3.5 py-3 text-xs">
+        <div role="status" className="border-t border-line bg-bg px-3.5 py-3 text-xs">
           <p className="text-faint">
             <span className="text-accent">$</span> ./hello
           </p>
           <p className="mt-1 flex items-center gap-2 text-text">
             Hello World
-            <span className="text-micro tracking-wider text-accent">
-              exit 0
-            </span>
+            <span className="text-micro text-accent">exit 0</span>
           </p>
         </div>
       )}
